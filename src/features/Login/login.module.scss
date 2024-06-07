@@ -1,0 +1,29 @@
+.form {
+  width: 200px;
+  height: 200px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  padding: 20px;
+  border-radius: 10px;
+  background-color: rgb(211, 211, 211);
+
+  h2 {
+    align-self: center;
+    margin-bottom: 10px;
+  }
+
+  input {
+    margin-top: 5px;
+    border-radius: 5px;
+    border: 0;
+    padding: 5px;
+  }
+
+  button {
+    margin-top: 20px;
+    border-radius: 5px;
+    border: 0;
+    padding: 5px;
+  }
+}
