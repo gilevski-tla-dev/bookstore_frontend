@@ -1,6 +1,22 @@
+import { useEffect, useState } from "react";
 import styles from "./filters.module.scss";
+import axios from "axios";
 
 const Filters = () => {
+  type Author = {
+    id: string;
+    name: string;
+  };
+
+  const [authors, setAuthors] = useState<Author[]>([]);
+
+  useEffect(() => {
+    axios
+      .get("https://665730a89f970b3b36c84dc4.mockapi.io/authors")
+      .then((response) => setAuthors(response.data))
+      .catch((error) => console.error("Ошибка", error));
+  }, []);
+
   return (
     <div className={styles.container}>
       <div className={styles.price_block}>
@@ -15,10 +31,12 @@ const Filters = () => {
         </div>
         <div className={styles.authors_block}>
           <h1>Авторы:</h1>
-          <label>
-            <input type="checkbox" />
-            <span>Пушкин</span>
-          </label>
+          {authors.map((authors) => (
+            <label key={authors.id}>
+              <input type="checkbox" />
+              <span>{authors.name}</span>
+            </label>
+          ))}
         </div>
       </div>
     </div>
