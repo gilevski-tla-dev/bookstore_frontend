@@ -1,20 +1,59 @@
-import { Routes, Route } from "react-router-dom";
+import { FC, ReactElement } from "react";
+import { Routes, Route, Navigate, useLocation } from "react-router-dom";
+import { useSelector } from "react-redux";
 
+import { RootState } from "../entites/redux/store";
 import { RouteType } from "../types/router.types";
 import Home from "./Home";
 import Login from "../features/Login";
+import ProtectedPage from "../features/ProtectedPage";
 
 const routeConfig: RouteType[] = [
-  { title: "Home", path: "/home", element: <Home /> },
-  { title: "Login", path: "/login", element: <Login /> },
+  { title: "Home", path: "/home", element: <Home />, protected: false },
+  { title: "Login", path: "/login", element: <Login />, protected: false },
   // add other routes here
+  {
+    title: "Protected",
+    path: "/protected",
+    element: <ProtectedPage />,
+    protected: true,
+  },
 ];
 
-const Router = () => {
+interface RequireAuthProps {
+  children: ReactElement;
+}
+
+const RequireAuth: FC<RequireAuthProps> = ({ children }) => {
+  const location = useLocation();
+  const isAuthenticated = useSelector(
+    (state: RootState) => state.auth.isAuthenticated
+  );
+  console.log(isAuthenticated);
+
+  if (!isAuthenticated) {
+    // Redirect to login page, storing current route in state.location
+    return <Navigate to="/login" state={{ from: location }} replace />;
+  }
+
+  return children;
+};
+
+const Router: FC = () => {
   return (
     <Routes>
       {routeConfig.map((route) => (
-        <Route key={route.path} path={route.path} element={route.element} />
+        <Route
+          key={route.path}
+          path={route.path}
+          element={
+            route.protected ? (
+              <RequireAuth>{route.element}</RequireAuth>
+            ) : (
+              route.element
+            )
+          }
+        />
       ))}
     </Routes>
   );
