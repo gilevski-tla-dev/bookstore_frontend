@@ -1,11 +1,15 @@
 import { useState, FormEvent } from "react";
 import { useDispatch } from "react-redux";
 import { login } from "../../entites/session/authSlice";
+import { useNavigate } from "react-router-dom";
 
 import styles from "./login.module.scss";
 
 const Login = () => {
+  const navigate = useNavigate();
+
   const dispatch = useDispatch();
+
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
 
@@ -14,6 +18,7 @@ const Login = () => {
     // Here process the form data
     console.log(username, password);
     dispatch(login(username));
+    navigate("/protected");
   };
   return (
     <form className={styles.form} onSubmit={handleLogin}>
