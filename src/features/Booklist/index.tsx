@@ -2,13 +2,14 @@ import { useState, useEffect } from "react";
 import styles from "./booklist.module.scss";
 import axios from "axios";
 import { Book } from "../../types/book.types";
+import { Link } from "react-router-dom";
 
 const BookList = () => {
   const [books, setBooks] = useState<Book[]>([]);
 
   useEffect(() => {
     axios
-      .get("https://665730a89f970b3b36c84dc4.mockapi.io/books")
+      .get("http://localhost:3000/books/")
       .then((response) => setBooks(response.data))
       .catch((error) => console.error("Ошибка при получении книг:", error));
   }, []);
@@ -23,11 +24,13 @@ const BookList = () => {
           <div className={styles.bottom_card}>
             <div className={styles.info}>
               <h1>{book.title}</h1>
-              <h2>{book.author}</h2>
+              <h2>{book.author.name}</h2> {/* Обновите здесь */}
             </div>
             <div className={styles.buy_block}>
               <h2>{book.price} руб.</h2>
-              <button>Купить</button>
+              <Link to={`/book_details/${book.id}`} key={book.id}>
+                <button>Купить</button>
+              </Link>
             </div>
           </div>
         </div>
