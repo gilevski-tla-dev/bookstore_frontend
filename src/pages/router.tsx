@@ -14,7 +14,7 @@ const routeConfig: RouteType[] = [
   { title: "Login", path: "/login", element: <Login />, protected: false },
   {
     title: "Bookdetails",
-    path: "/book_details/:id",
+    path: "/books/:id",
     element: <BookdetailsPage />,
     protected: false,
   },

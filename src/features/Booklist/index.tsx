@@ -24,11 +24,11 @@ const BookList = () => {
           <div className={styles.bottom_card}>
             <div className={styles.info}>
               <h1>{book.title}</h1>
-              <h2>{book.author.name}</h2> {/* Обновите здесь */}
+              <h2>{book.author.name}</h2>
             </div>
             <div className={styles.buy_block}>
               <h2>{book.price} руб.</h2>
-              <Link to={`/book_details/${book.id}`} key={book.id}>
+              <Link to={`/books/${book.id}`} key={book.id}>
                 <button>Купить</button>
               </Link>
             </div>

@@ -1,11 +1,11 @@
 import { useEffect, useState } from "react";
 import styles from "./bookdetails.module.scss";
-import { useParams } from "react-router-dom";
 import axios from "axios";
 import { Book } from "../../types/book.types";
+import { useParams } from "react-router-dom";
 
 const Bookdetails = () => {
-  const { id } = useParams() as { id: string };
+  const { id } = useParams<{ id: string }>();
   const [book, setBook] = useState<Book | null>(null);
 
   useEffect(() => {
