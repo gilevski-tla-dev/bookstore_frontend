@@ -1,24 +1,22 @@
 import { useEffect, useState } from "react";
 import styles from "./filters.module.scss";
-import axios from "axios";
+import { Author } from "../../types/author.types";
+import { getAuthors } from "../../shared/api/authors";
 
 const Filters = () => {
-  type Author = {
-    id: string;
-    name: string;
-  };
-
   const [authors, setAuthors] = useState<Author[]>([]);
 
   useEffect(() => {
-    axios
-      .get("https://665730a89f970b3b36c84dc4.mockapi.io/authors")
-      .then((response) => setAuthors(response.data))
-      .catch((error) => console.error("Ошибка", error));
+    const fetchAuthors = async () => {
+      const authorData = await getAuthors();
+      setAuthors(authorData);
+    };
+    fetchAuthors();
   }, []);
 
   return (
     <div className={styles.container}>
+      <h1 className={styles.title}>Фильтры</h1>
       <div className={styles.price_block}>
         <h1>Цена:</h1>
         <div>
@@ -31,10 +29,11 @@ const Filters = () => {
         </div>
         <div className={styles.authors_block}>
           <h1>Авторы:</h1>
-          {authors.map((authors) => (
-            <label key={authors.id}>
+          {authors.map((author) => (
+            <label key={author.id}>
               <input type="checkbox" />
-              <span>{authors.name}</span>
+              <span>{author.name}</span>
+              <hr />
             </label>
           ))}
         </div>

@@ -1,18 +1,21 @@
 import { useEffect, useState } from "react";
 import styles from "./bookdetails.module.scss";
-import axios from "axios";
 import { Book } from "../../types/book.types";
 import { useParams } from "react-router-dom";
+import { getBook } from "../../shared/api/books";
 
 const Bookdetails = () => {
   const { id } = useParams<{ id: string }>();
   const [book, setBook] = useState<Book | null>(null);
 
   useEffect(() => {
-    axios
-      .get<Book>(`http://localhost:3000/books/${id}`)
-      .then((response) => setBook(response.data))
-      .catch((error) => console.error("Ошибка при получении книги:", error));
+    const fetchBook = async () => {
+      if (id) {
+        const bookData = await getBook(id);
+        setBook(bookData);
+      }
+    };
+    fetchBook();
   }, [id]);
 
   if (!book) return null;

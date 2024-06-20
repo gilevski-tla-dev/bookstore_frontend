@@ -1,17 +1,18 @@
 import { useState, useEffect } from "react";
 import styles from "./booklist.module.scss";
-import axios from "axios";
 import { Book } from "../../types/book.types";
 import { Link } from "react-router-dom";
+import { getBooks } from "../../shared/api/books";
 
 const BookList = () => {
   const [books, setBooks] = useState<Book[]>([]);
 
   useEffect(() => {
-    axios
-      .get("http://localhost:3000/books/")
-      .then((response) => setBooks(response.data))
-      .catch((error) => console.error("Ошибка при получении книг:", error));
+    const fetchBooks = async () => {
+      const bookData = await getBooks();
+      setBooks(bookData);
+    };
+    fetchBooks();
   }, []);
 
   return (
