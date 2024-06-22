@@ -8,8 +8,8 @@ import { Author } from "../../types/author.types";
 const Filters: React.FC = () => {
   const [authors, setAuthors] = useState<Author[]>([]);
 
-  const { priceRange, setPriceRange } = useFilter();
-
+  const { priceRange, setPriceRange, selectedAuthor, setSelectedAuthor } =
+    useFilter();
   const handlePriceFromChange = (
     event: React.ChangeEvent<HTMLInputElement>
   ) => {
@@ -24,6 +24,9 @@ const Filters: React.FC = () => {
     setPriceRange({ from: "", to: "" });
   };
 
+  const handleAuthorChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    setSelectedAuthor(event.target.value);
+  };
   useEffect(() => {
     const fetchAuthors = async () => {
       const authorData = await getAuthors();
@@ -59,7 +62,12 @@ const Filters: React.FC = () => {
         <h1>Авторы:</h1>
         {authors.map((author) => (
           <label key={author.id}>
-            <input type="checkbox" />
+            <input
+              type="checkbox"
+              value={author.name}
+              checked={selectedAuthor === author.name}
+              onChange={handleAuthorChange}
+            />
             <span>{author.name}</span>
             <hr />
           </label>

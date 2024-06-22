@@ -6,16 +6,20 @@ import styles from "./booklist.module.scss";
 import { Link } from "react-router-dom";
 
 const BookList: React.FC = () => {
-  const { priceRange } = useFilter();
   const [books, setBooks] = useState<Book[]>([]);
+
+  const { priceRange, selectedAuthor } = useFilter();
 
   useEffect(() => {
     const fetchBooks = async () => {
-      const bookData = await getBooks(priceRange);
+      const bookData = await getBooks({
+        ...priceRange,
+        author: selectedAuthor,
+      });
       setBooks(bookData);
     };
     fetchBooks();
-  }, [priceRange]);
+  }, [priceRange, selectedAuthor]);
 
   return (
     <div className={styles.container}>

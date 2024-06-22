@@ -6,10 +6,14 @@ interface PriceRange {
   to: string;
 }
 
-export const getBooks = async (priceRange: PriceRange): Promise<Book[]> => {
+interface GetBooksParams extends PriceRange {
+  author: string;
+}
+
+export const getBooks = async (params: GetBooksParams): Promise<Book[]> => {
   try {
     const response = await axios.get<Book[]>(
-      `/books?from=${priceRange.from}&to=${priceRange.to}`
+      `/books?from=${params.from}&to=${params.to}&author=${params.author}`
     );
     return response.data;
   } catch (error) {

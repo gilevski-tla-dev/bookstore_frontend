@@ -8,6 +8,8 @@ interface PriceRange {
 interface FilterContextProps {
   priceRange: PriceRange;
   setPriceRange: React.Dispatch<React.SetStateAction<PriceRange>>;
+  selectedAuthor: string;
+  setSelectedAuthor: React.Dispatch<React.SetStateAction<string>>;
 }
 
 // Create a context
@@ -25,9 +27,12 @@ export const FilterProvider: React.FC<FilterProviderProps> = ({ children }) => {
     from: "",
     to: "",
   });
+  const [selectedAuthor, setSelectedAuthor] = useState<string>("");
 
   return (
-    <FilterContext.Provider value={{ priceRange, setPriceRange }}>
+    <FilterContext.Provider
+      value={{ priceRange, setPriceRange, selectedAuthor, setSelectedAuthor }}
+    >
       {children}
     </FilterContext.Provider>
   );
