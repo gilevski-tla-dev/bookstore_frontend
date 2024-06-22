@@ -1,9 +1,16 @@
 import axios from "../axios";
 import { Book } from "../../types/book.types";
 
-export const getBooks = async (): Promise<Book[]> => {
+interface PriceRange {
+  from: string;
+  to: string;
+}
+
+export const getBooks = async (priceRange: PriceRange): Promise<Book[]> => {
   try {
-    const response = await axios.get<Book[]>("/books");
+    const response = await axios.get<Book[]>(
+      `/books?from=${priceRange.from}&to=${priceRange.to}`
+    );
     return response.data;
   } catch (error) {
     console.error("Ошибка при получении книг:", error);

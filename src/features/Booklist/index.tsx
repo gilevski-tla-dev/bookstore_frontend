@@ -1,19 +1,21 @@
-import { useState, useEffect } from "react";
-import styles from "./booklist.module.scss";
-import { Book } from "../../types/book.types";
-import { Link } from "react-router-dom";
+import { useEffect, useState } from "react";
+import { useFilter } from "../../entites/useFilter";
 import { getBooks } from "../../shared/api/books";
+import { Book } from "../../types/book.types";
+import styles from "./booklist.module.scss";
+import { Link } from "react-router-dom";
 
-const BookList = () => {
+const BookList: React.FC = () => {
+  const { priceRange } = useFilter();
   const [books, setBooks] = useState<Book[]>([]);
 
   useEffect(() => {
     const fetchBooks = async () => {
-      const bookData = await getBooks();
+      const bookData = await getBooks(priceRange);
       setBooks(bookData);
     };
     fetchBooks();
-  }, []);
+  }, [priceRange]);
 
   return (
     <div className={styles.container}>
