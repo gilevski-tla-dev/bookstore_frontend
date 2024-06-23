@@ -1,14 +1,17 @@
-import { useEffect, useState } from "react";
-import { useFilter } from "../../entites/useFilter";
+import { useEffect } from "react";
 import { getBooks } from "../../shared/api/books";
-import { Book } from "../../types/book.types";
 import styles from "./booklist.module.scss";
 import { Link } from "react-router-dom";
+import { AppDispatch, RootState } from "../../entites/redux/store";
+import { useDispatch, useSelector } from "react-redux";
+import { setBooks } from "../../entites/redux/booksSlice";
 
 const BookList: React.FC = () => {
-  const [books, setBooks] = useState<Book[]>([]);
-
-  const { priceRange, selectedAuthor } = useFilter();
+  const dispatch: AppDispatch = useDispatch();
+  const { books } = useSelector((state: RootState) => state.books);
+  const { priceRange, selectedAuthor } = useSelector(
+    (state: RootState) => state.filter
+  );
 
   useEffect(() => {
     const fetchBooks = async () => {
@@ -16,10 +19,10 @@ const BookList: React.FC = () => {
         ...priceRange,
         author: selectedAuthor,
       });
-      setBooks(bookData);
+      dispatch(setBooks(bookData));
     };
     fetchBooks();
-  }, [priceRange, selectedAuthor]);
+  }, [dispatch, priceRange, selectedAuthor]);
 
   return (
     <div className={styles.container}>

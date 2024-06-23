@@ -1,32 +1,43 @@
-import { useEffect, useState } from "react";
+import { ChangeEvent, useEffect, useState } from "react";
 
-import { useFilter } from "../../entites/useFilter";
 import { getAuthors } from "../../shared/api/authors";
 import styles from "./filters.module.scss";
 import { Author } from "../../types/author.types";
+import {
+  setPriceRange,
+  setSelectedAuthor,
+} from "../../entites/redux/filterSlice";
+import { useDispatch, useSelector } from "react-redux";
+import { AppDispatch, RootState } from "../../entites/redux/store";
 
 const Filters: React.FC = () => {
+  const dispatch: AppDispatch = useDispatch();
+  const { priceRange, selectedAuthor } = useSelector(
+    (state: RootState) => state.filter
+  );
   const [authors, setAuthors] = useState<Author[]>([]);
 
-  const { priceRange, setPriceRange, selectedAuthor, setSelectedAuthor } =
-    useFilter();
-  const handlePriceFromChange = (
-    event: React.ChangeEvent<HTMLInputElement>
-  ) => {
-    setPriceRange({ ...priceRange, from: event.target.value });
+  const handlePriceFromChange = (event: ChangeEvent<HTMLInputElement>) => {
+    dispatch(setPriceRange({ ...priceRange, from: event.target.value }));
   };
 
-  const handlePriceToChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    setPriceRange({ ...priceRange, to: event.target.value });
+  const handlePriceToChange = (event: ChangeEvent<HTMLInputElement>) => {
+    dispatch(setPriceRange({ ...priceRange, to: event.target.value }));
   };
 
   const resetFields = () => {
-    setPriceRange({ from: "", to: "" });
+    dispatch(setPriceRange({ from: "", to: "" }));
   };
 
   const handleAuthorChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    setSelectedAuthor(event.target.value);
+    const authorName = event.target.value;
+    if (selectedAuthor === authorName) {
+      dispatch(setSelectedAuthor(""));
+    } else {
+      dispatch(setSelectedAuthor(authorName));
+    }
   };
+
   useEffect(() => {
     const fetchAuthors = async () => {
       const authorData = await getAuthors();

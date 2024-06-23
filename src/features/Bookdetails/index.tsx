@@ -7,17 +7,21 @@ import { getBook } from "../../shared/api/books";
 const Bookdetails = () => {
   const { id } = useParams<{ id: string }>();
   const [book, setBook] = useState<Book | null>(null);
+  const [isLoading, setIsLoading] = useState<boolean>(false); // новое состояние загрузки
 
   useEffect(() => {
     const fetchBook = async () => {
+      setIsLoading(true); // начало загрузки
       if (id) {
         const bookData = await getBook(id);
         setBook(bookData);
       }
+      setIsLoading(false); // конец загрузки
     };
     fetchBook();
   }, [id]);
 
+  if (isLoading) return <div>Загрузка...</div>; // отображение состояния загрузки
   if (!book) return null;
 
   return (
