@@ -1,5 +1,4 @@
 import { ChangeEvent, useEffect, useState } from "react";
-
 import { getAuthors } from "../../shared/api/authors";
 import styles from "./filters.module.scss";
 import { Author } from "../../types/author.types";
@@ -10,6 +9,10 @@ import {
 import { useDispatch, useSelector } from "react-redux";
 import { AppDispatch, RootState } from "../../entites/redux/store";
 
+/**
+ * Filter component
+ *
+ */
 const Filters: React.FC = () => {
   const dispatch: AppDispatch = useDispatch();
   const { priceRange, selectedAuthor } = useSelector(
