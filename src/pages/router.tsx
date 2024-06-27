@@ -7,10 +7,17 @@ import { RouteType } from "../types/router.types";
 import Home from "./Home";
 import Login from "../features/Login";
 import ProtectedPage from "../features/ProtectedPage";
+import BookdetailsPage from "./BookdetailsPage";
 
 const routeConfig: RouteType[] = [
   { title: "Home", path: "/home", element: <Home />, protected: false },
   { title: "Login", path: "/login", element: <Login />, protected: false },
+  {
+    title: "Bookdetails",
+    path: "/books/:id",
+    element: <BookdetailsPage />,
+    protected: false,
+  },
   // add other routes here
   {
     title: "Protected",
@@ -42,6 +49,7 @@ const RequireAuth: FC<RequireAuthProps> = ({ children }) => {
 const Router: FC = () => {
   return (
     <Routes>
+      <Route path="/" element={<Navigate to="/home" />} />
       {routeConfig.map((route) => (
         <Route
           key={route.path}

@@ -1,17 +1,28 @@
-import { useState, useEffect } from "react";
+import { useEffect } from "react";
+import { getBooks } from "../../shared/api/books";
 import styles from "./booklist.module.scss";
-import axios from "axios";
-import { Book } from "../../types/book.types";
+import { Link } from "react-router-dom";
+import { AppDispatch, RootState } from "../../entites/redux/store";
+import { useDispatch, useSelector } from "react-redux";
+import { setBooks } from "../../entites/redux/booksSlice";
 
-const BookList = () => {
-  const [books, setBooks] = useState<Book[]>([]);
+const BookList: React.FC = () => {
+  const dispatch: AppDispatch = useDispatch();
+  const { books } = useSelector((state: RootState) => state.books);
+  const { priceRange, selectedAuthor } = useSelector(
+    (state: RootState) => state.filter
+  );
 
   useEffect(() => {
-    axios
-      .get("https://665730a89f970b3b36c84dc4.mockapi.io/books")
-      .then((response) => setBooks(response.data))
-      .catch((error) => console.error("Ошибка при получении книг:", error));
-  }, []);
+    const fetchBooks = async () => {
+      const bookData = await getBooks({
+        ...priceRange,
+        author: selectedAuthor,
+      });
+      dispatch(setBooks(bookData));
+    };
+    fetchBooks();
+  }, [dispatch, priceRange, selectedAuthor]);
 
   return (
     <div className={styles.container}>
@@ -23,11 +34,13 @@ const BookList = () => {
           <div className={styles.bottom_card}>
             <div className={styles.info}>
               <h1>{book.title}</h1>
-              <h2>{book.author}</h2>
+              <h2>{book.author.name}</h2>
             </div>
             <div className={styles.buy_block}>
               <h2>{book.price} руб.</h2>
-              <button>Купить</button>
+              <Link to={`/books/${book.id}`} key={book.id}>
+                <button>Купить</button>
+              </Link>
             </div>
           </div>
         </div>
