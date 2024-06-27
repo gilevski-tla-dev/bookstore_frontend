@@ -8,6 +8,7 @@ import {
 } from "../../entites/redux/filterSlice";
 import { useDispatch, useSelector } from "react-redux";
 import { AppDispatch, RootState } from "../../entites/redux/store";
+import { useDebounce } from "../../shared/hooks/useDebounce";
 
 /**
  * Filter component
@@ -15,21 +16,31 @@ import { AppDispatch, RootState } from "../../entites/redux/store";
  */
 const Filters: React.FC = () => {
   const dispatch: AppDispatch = useDispatch();
-  const { priceRange, selectedAuthor } = useSelector(
-    (state: RootState) => state.filter
+  const selectedAuthor = useSelector(
+    (state: RootState) => state.filter.selectedAuthor
   );
   const [authors, setAuthors] = useState<Author[]>([]);
+  const [priceFrom, setPriceFrom] = useState("");
+  const [priceTo, setPriceTo] = useState("");
+
+  const debouncedPriceFrom = useDebounce(priceFrom, 500);
+  const debouncedPriceTo = useDebounce(priceTo, 500);
+
+  useEffect(() => {
+    dispatch(setPriceRange({ from: debouncedPriceFrom, to: debouncedPriceTo }));
+  }, [debouncedPriceFrom, debouncedPriceTo, dispatch]);
 
   const handlePriceFromChange = (event: ChangeEvent<HTMLInputElement>) => {
-    dispatch(setPriceRange({ ...priceRange, from: event.target.value }));
+    setPriceFrom(event.target.value);
   };
 
   const handlePriceToChange = (event: ChangeEvent<HTMLInputElement>) => {
-    dispatch(setPriceRange({ ...priceRange, to: event.target.value }));
+    setPriceTo(event.target.value);
   };
 
   const resetFields = () => {
-    dispatch(setPriceRange({ from: "", to: "" }));
+    setPriceFrom("");
+    setPriceTo("");
   };
 
   const handleAuthorChange = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -58,17 +69,13 @@ const Filters: React.FC = () => {
           <h2>От:</h2>
           <input
             type="text"
-            value={priceRange.from}
+            value={priceFrom}
             onChange={handlePriceFromChange}
           />
         </div>
         <div>
           <h2>До:</h2>
-          <input
-            type="text"
-            value={priceRange.to}
-            onChange={handlePriceToChange}
-          />
+          <input type="text" value={priceTo} onChange={handlePriceToChange} />
         </div>
         <button onClick={resetFields}>Сбросить</button>
       </div>
