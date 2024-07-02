@@ -6,6 +6,7 @@ interface FilterState {
     to: string;
   };
   selectedAuthor: string;
+  searchInput: string;
 }
 
 const initialState: FilterState = {
@@ -14,6 +15,7 @@ const initialState: FilterState = {
     to: "",
   },
   selectedAuthor: "",
+  searchInput: "",
 };
 
 export const filterSlice = createSlice({
@@ -26,9 +28,13 @@ export const filterSlice = createSlice({
     setSelectedAuthor(state, action: PayloadAction<string>) {
       state.selectedAuthor = action.payload;
     },
+    setSearchInput(state, action: PayloadAction<string>) {
+      state.searchInput = action.payload;
+    },
   },
 });
 
-export const { setPriceRange, setSelectedAuthor } = filterSlice.actions;
+export const { setPriceRange, setSelectedAuthor, setSearchInput } =
+  filterSlice.actions;
 
 export default filterSlice.reducer;
